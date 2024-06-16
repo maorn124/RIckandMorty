@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct LocationListView: View {
-    @ObservedObject var viewModel = LocationsViewModel()
+    @ObservedObject var authViewModel: AuthViewModel
+    @ObservedObject var viewModel = LocationViewModel()
 
     var body: some View {
         NavigationView {
@@ -10,13 +11,16 @@ struct LocationListView: View {
                     Text(location.name)
                 }
             }
-            .navigationTitle("Locations")
+            .navigationBarTitle("Locations")
+            .navigationBarItems(trailing: Button(action: {
+                authViewModel.signOut()
+            }) {
+                Text("Logout")
+                    .foregroundColor(.red)
+            })
         }
-    }
-}
-
-struct LocationListView_Previews: PreviewProvider {
-    static var previews: some View {
-        LocationListView()
+        .onAppear {
+            viewModel.fetchLocations()
+        }
     }
 }
